@@ -108,13 +108,57 @@ public class ItemDAO {
         }
     }
 
-	public List<Item> listar(String busca, String status) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public List<Item> listarA() {
+        List<Item> itemA = new ArrayList<>();
+        String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY status = 'DISPONIVEL' ;";
 
-	public void cadastrar(Item item) {
-		// TODO Auto-generated method stub
-		
-	}
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Item it = new Item();
+                it.setId_item(rs.getInt("id_item"));
+                it.setNome_item(rs.getString("nome_item"));
+                it.setDescricao(rs.getString("descricao"));
+                it.setData_achado(rs.getObject("data_achado", LocalDate.class));
+                it.setLocal_achado(rs.getString("local_achado"));
+                it.setStatus_item(rs.getBoolean("status_item"));
+                itemA.add(it);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar itens.", e);
+        }
+        return itemA;
+    }
+
+    public List<Item> listarD() {
+        List<Item> itemD = new ArrayList<>();
+        String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY status = 'DEVOLVIDO' ;";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Item it = new Item();
+                it.setId_item(rs.getInt("id_item"));
+                it.setNome_item(rs.getString("nome_item"));
+                it.setDescricao(rs.getString("descricao"));
+                it.setData_achado(rs.getObject("data_achado", LocalDate.class));
+                it.setLocal_achado(rs.getString("local_achado"));
+                it.setStatus_item(rs.getBoolean("status_item"));
+                itemD.add(it);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar itens.", e);
+        }
+        return itemD;
+    }
+    
+    
+    public void cadastrar(Item item) {
+        // TODO Auto-generated method stub
+        
+    }
 }
