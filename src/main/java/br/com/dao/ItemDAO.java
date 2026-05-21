@@ -161,4 +161,9 @@ public class ItemDAO {
         // TODO Auto-generated method stub
         
     }
+
+	public List<Item> listar(String busca, String status) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
