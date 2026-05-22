@@ -18,7 +18,7 @@ import java.util.List;
 public class AchadosPerdidosServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
-    private ItemDAO dao = new ItemDAO();
+    private ItemDAO itemDao = new ItemDAO();
     private EntregasDAO entregasDao = new EntregasDAO();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,8 +34,8 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 if (status == null || status.isEmpty()) {
                     status = "ACHADO";
                 }
-                
-                List<Item> itens = dao.listar(busca, status);
+                	
+                List<Item> itens = itemDao.listar();
                 request.setAttribute("itens", itens);
                 request.getRequestDispatcher("index.jsp").forward(request, response);
                 
@@ -43,7 +43,7 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 String idParam = request.getParameter("id");
                 if (idParam != null && !idParam.isEmpty() && idParam.matches("\\d+")) {
                     int id = Integer.parseInt(idParam);
-                    Item item = dao.buscarPorId(id);
+                    Item item = itemDao.buscarPorId(id);
                     request.setAttribute("item", item);
                     request.getRequestDispatcher("detalhes.jsp").forward(request, response);
                 } else {
@@ -54,7 +54,7 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 String idParam = request.getParameter("id");
                 if (idParam != null && !idParam.isEmpty() && idParam.matches("\\d+")) {
                     int id = Integer.parseInt(idParam);
-                    dao.excluir(id);
+                    itemDao.excluir(id);
                 }
                 response.sendRedirect("AchadosPerdidosServlet?action=listar");
                 
@@ -62,7 +62,7 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 String idParam = request.getParameter("id");
                 if (idParam != null && !idParam.isEmpty() && idParam.matches("\\d+")) {
                     int id = Integer.parseInt(idParam);
-                    entregasDao.marcarComoDevolvido(id);
+                    itemDao.marcarComoDevolvido(id);
                 }
                 response.sendRedirect("AchadosPerdidosServlet?action=listar");
             }
@@ -78,19 +78,21 @@ public class AchadosPerdidosServlet extends HttpServlet {
         if ("cadastrar".equals(action)) {
             try {
                 Item item = new Item();
+                // Mapeando os campos corretos do formulário para as variáveis reais do Model
+                item.setNome_item(request.getParameter("nome_item")); // antigo categoria/nome
                 item.setDescricao(request.getParameter("descricao"));
-                item.setCategoria(request.getParameter("categoria"));
-                item.setLocal(request.getParameter("local"));
+                item.setLocal_achado(request.getParameter("local_achado"));
                 
-                String dataStr = request.getParameter("data_encontro");
+                String dataStr = request.getParameter("data_achado");
                 if (dataStr != null && !dataStr.isEmpty()) {
-                    item.setDataEncontro(Date.valueOf(dataStr));
+                    item.setData_achado(java.time.LocalDate.parse(dataStr));
                 } else {
-                    item.setDataEncontro(new Date(System.currentTimeMillis()));
+                    item.setData_achado(java.time.LocalDate.now());
                 }
-                item.setObservacao(request.getParameter("observacao"));
+                item.setStatus_item(true); // true = Disponível
 
-                dao.cadastrar(item);
+                // Chama o método correto que tem o SQL do INSERT
+                itemDao.inserir(item); 
             } catch (Exception e) {
                 e.printStackTrace();
             }

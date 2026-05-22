@@ -108,15 +108,6 @@ public class EntregasDAO {
         }
     }
 
-	public void marcarComoDevolvido1(int id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void marcarComoDevolvido(int id) {
-		// TODO Auto-generated method stub
-		
-	}
 
         
     }

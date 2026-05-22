@@ -110,7 +110,7 @@ public class ItemDAO {
 
     public List<Item> listarA() {
         List<Item> itemA = new ArrayList<>();
-        String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY status = 'DISPONIVEL' ;";
+        String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY status_item = 'DISPONIVEL' ;";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -134,7 +134,7 @@ public class ItemDAO {
 
     public List<Item> listarD() {
         List<Item> itemD = new ArrayList<>();
-        String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY status = 'DEVOLVIDO' ;";
+        String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY status_item = 'DEVOLVIDO' ;";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -156,14 +156,74 @@ public class ItemDAO {
         return itemD;
     }
     
+    public List<Item> listarDIA() {
+        List<Item> itemDIA = new ArrayList<>();
+        String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY data_achado DESC ;";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Item it = new Item();
+                it.setId_item(rs.getInt("id_item"));
+                it.setNome_item(rs.getString("nome_item"));
+                it.setDescricao(rs.getString("descricao"));
+                it.setData_achado(rs.getObject("data_achado", LocalDate.class));
+                it.setLocal_achado(rs.getString("local_achado"));
+                it.setStatus_item(rs.getBoolean("status_item"));
+                itemDIA.add(it);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar itens.", e);
+        }
+        return itemDIA;
+    }
     
-    public void cadastrar(Item item) {
-        // TODO Auto-generated method stub
+
+
+    public void marcarComoDevolvido(int id) {
+        // O WHERE agora garante que o item precisa ter o ID certo E estar disponível
+        String sql = "UPDATE ITEM SET status_item = 'devolvido' WHERE id_item = ? AND status_item = 'disponivel'";
         
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, id);
+            int linhasAfetadas = stmt.executeUpdate();
+            
+            // Opcional: Fornece um feedback visual ou log do que aconteceu
+            if (linhasAfetadas == 0) {
+                System.out.println("Aviso: O item não foi alterado. " +
+                                   "Motivo: ID inexistente ou o item já esta marcado como devolvido.");
+            } else {
+                System.out.println("Item marcado como Devolvido com sucesso!");
+            }
+            
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao Marcar Como Devolvido.", e);
+        }
     }
 
-	public List<Item> listar(String busca, String status) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+public void marcarComoAchado( int id) {
+    
+     String sql = "UPDATE ITEM SET status_item = 'disponivel' WHERE id_item = ? AND status_item = 'devolvido' ";
+    
+     try (Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+    
+         stmt.setInt(1, id);
+          int linhasAfetadas = stmt.executeUpdate();
+          
+          if (linhasAfetadas == 0) {
+              System.out.println("Aviso: O item não foi alterado."
+                      + "Motivo: ID inexistente ou o item já esta marcado como Achado");
+          }else {
+              System.out.println(" Item marcado como Achado com sucesso!");
+          }
+       } catch (SQLException e) {
+           throw new RuntimeException("Erro ao Marcar Como Achado.", e);
+}
+
+}
 }
