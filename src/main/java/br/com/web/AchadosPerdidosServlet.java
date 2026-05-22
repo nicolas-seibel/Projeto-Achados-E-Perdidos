@@ -35,7 +35,7 @@ public class AchadosPerdidosServlet extends HttpServlet {
                     status = "ACHADO";
                 }
                 	
-                List<Item> itens = itemDao.listar();
+                List<Item> itens = itemDao.listarItem();
                 request.setAttribute("itens", itens);
                 request.getRequestDispatcher("index.jsp").forward(request, response);
                 
@@ -43,7 +43,7 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 String idParam = request.getParameter("id");
                 if (idParam != null && !idParam.isEmpty() && idParam.matches("\\d+")) {
                     int id = Integer.parseInt(idParam);
-                    Item item = itemDao.buscarPorId(id);
+                    Item item = itemDao.buscarPorIdItem(id);
                     request.setAttribute("item", item);
                     request.getRequestDispatcher("detalhes.jsp").forward(request, response);
                 } else {
@@ -54,7 +54,7 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 String idParam = request.getParameter("id");
                 if (idParam != null && !idParam.isEmpty() && idParam.matches("\\d+")) {
                     int id = Integer.parseInt(idParam);
-                    itemDao.excluir(id);
+                    itemDao.excluirItem(id);
                 }
                 response.sendRedirect("AchadosPerdidosServlet?action=listar");
                 
@@ -92,7 +92,7 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 item.setStatus_item(true); // true = Disponível
 
                 // Chama o método correto que tem o SQL do INSERT
-                itemDao.inserir(item); 
+                itemDao.inserirItem(item); 
             } catch (Exception e) {
                 e.printStackTrace();
             }
