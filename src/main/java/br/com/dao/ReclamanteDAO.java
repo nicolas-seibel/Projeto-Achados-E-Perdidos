@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ReclamanteDAO {
 
-    public List<Reclamante> listar() {
+    public List<Reclamante> listarReclamante() {
         List<Reclamante> reclamantes = new ArrayList<>();
         String sql = "SELECT cpf_reclamante, nome_reclamante , telefone_reclamante, email_reclamante FROM RECLAMANTE ORDER BY cpf_reclamante;";
 
@@ -33,7 +33,7 @@ public class ReclamanteDAO {
         return reclamantes;
     }
 
-    public Reclamante buscarPorId(String cpf) {
+    public Reclamante buscarPorIdReclamante(String cpf) {
         String sql = "SELECT cpf_reclamante, nome_reclamante FROM RECLAMANTE WHERE cpf_reclamante = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -56,7 +56,7 @@ public class ReclamanteDAO {
         return null;
     }
 
-    public void inserir(Reclamante reclamante) {
+    public void inserirReclamante(Reclamante reclamante) {
         String sql = "INSERT INTO RECLAMANTE (cpf_reclamante, nome_reclamante, telefone_reclamante, email_reclamante) VALUES (?, ?, ?,?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -73,7 +73,7 @@ public class ReclamanteDAO {
     }
 
     
-    public void atualizar(Reclamante reclamante) {
+    public void atualizarReclamante(Reclamante reclamante) {
         String sql = "UPDATE RECLAMANTE SET nome_reclamante  = ?, telefone_reclamante = ?, email_reclamante = ?, WHERE cpf_reclamante  = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -89,7 +89,7 @@ public class ReclamanteDAO {
         }
     }
 
-    public void excluir(String cpf) {
+    public void excluirReclamante(String cpf) {
         String sql = "DELETE FROM RECLAMANTE WHERE cpf_reclamante = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();

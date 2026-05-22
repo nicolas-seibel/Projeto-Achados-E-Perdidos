@@ -31,7 +31,7 @@ public class DevolutorDAO {
         return devolutores;
     }
 
-    public Devolutor buscarPorCpf(String cpf) {
+    public Devolutor buscarPorCpfDevolutor(String cpf) {
         String sql = "SELECT cpf_devolutor FROM DEVOLUTOR WHERE cpf_devolutor = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -54,7 +54,7 @@ public class DevolutorDAO {
         return null;
     }
 
-    public void inserir(Devolutor Devolutor) {
+    public void inserirDevolutor(Devolutor Devolutor) {
         String sql = "INSERT INTO ITEM cpf_devolutor, nome_devolutor, telefone_devolutor, email_devolutor VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -70,7 +70,7 @@ public class DevolutorDAO {
         }
     }
 
-    public void atualizar(Devolutor Devolutor) {
+    public void atualizarDevolutor(Devolutor Devolutor) {
         String sql = "UPDATE ITEM SET nome_devolutor = ?, telefone_devolutor = ?, email_devolutor = ?, WHERE cpf_devolutor = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -86,7 +86,7 @@ public class DevolutorDAO {
         }
     }
 
-    public void excluir(int id) {
+    public void excluirDevolutor(int id) {
         String sql = "DELETE FROM ITEM WHERE cpf_devolutor = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -98,6 +98,4 @@ public class DevolutorDAO {
             throw new RuntimeException("Erro ao excluir DEVOLUTOR.", e);
         }
     }
-
-
 }

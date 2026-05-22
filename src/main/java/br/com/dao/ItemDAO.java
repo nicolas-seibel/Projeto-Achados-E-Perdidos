@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemDAO {
-    public List<Item> listar() {
+    public List<Item> listarItem() {
         List<Item> itens = new ArrayList<>();
         String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY id_item;";
 
@@ -33,7 +33,7 @@ public class ItemDAO {
         return itens;
     }
 
-    public Item buscarPorId(int id) {
+    public Item buscarPorIdItem(int id) {
         // CORRIGIDO: Agora busca todas as colunas necessárias
         String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM WHERE id_item = ?";
 
@@ -60,7 +60,7 @@ public class ItemDAO {
         return null;
     }
 
-    public void inserir(Item item) {
+    public void inserirItem(Item item) {
         // CORRIGIDO: Adicionado as 6 interrogações corretas e removido o id do insert caso seja auto_increment
         String sql = "INSERT INTO ITEM (nome_item, descricao, data_achado, local_achado, status_item) VALUES (?, ?, ?, ?, ?)";
 
@@ -78,7 +78,7 @@ public class ItemDAO {
         }
     }
 
-    public void atualizar(Item item) {
+    public void atualizarItem(Item item) {
         // CORRIGIDO: Removida a vírgula antes do WHERE e adicionado o status_item para permitir a devolução
         String sql = "UPDATE ITEM SET nome_item = ?, descricao = ?, status_item = ? WHERE id_item = ?";
 
@@ -95,7 +95,7 @@ public class ItemDAO {
         }
     }
 
-    public void excluir(int id) {
+    public void excluirItem(int id) {
         String sql = "DELETE FROM ITEM WHERE id_item = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -108,7 +108,7 @@ public class ItemDAO {
         }
     }
 
-    public List<Item> listarA() {
+    public List<Item> listarAItem() {
         List<Item> itemA = new ArrayList<>();
         String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY status_item = 'DISPONIVEL' ;";
 
@@ -132,7 +132,7 @@ public class ItemDAO {
         return itemA;
     }
 
-    public List<Item> listarD() {
+    public List<Item> listarDItem() {
         List<Item> itemD = new ArrayList<>();
         String sql = "SELECT id_item, nome_item, descricao, data_achado, local_achado, status_item FROM ITEM ORDER BY status_item = 'DEVOLVIDO' ;";
 

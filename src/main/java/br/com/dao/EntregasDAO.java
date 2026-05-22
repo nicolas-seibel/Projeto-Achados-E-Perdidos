@@ -11,7 +11,7 @@ import java.util.List;
 public class EntregasDAO {
 
 
-    public List<Entregas> listar() {
+    public List<Entregas> listarEntregas() {
         List<Entregas> entregass = new ArrayList<>();
         String sql = "SELECT id_entrega, id_item , cpf_reclamante, cpf_devolutor, data_entrega FROM ENTREGAS ORDER BY id_entrega;";
 
@@ -36,7 +36,7 @@ public class EntregasDAO {
         return entregass;
     }
 
-    public Entregas buscarPorId(String cpf) {
+    public Entregas buscarPorIdEntregas(String cpf) {
         String sql = "SELECT id_entrega, data_entrega, cpf_devolutor, cpf_reclamante FROM RECLAMANTE WHERE id_entrega = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -61,7 +61,7 @@ public class EntregasDAO {
         return null;
     }
 
-    public void inserir(Entregas entregas) {
+    public void inserirEntrega(Entregas entregas) {
         String sql = "INSERT INTO ENTREGAS (id_entrega, id_item, cpf_reclamante, cpf_devolutor, data_entrega) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -79,7 +79,7 @@ public class EntregasDAO {
     }
 
     
-    public void atualizar(Entregas entregas) {
+    public void atualizarEntrega(Entregas entregas) {
         String sql = "UPDATE ENTREGAS SET id_entrega  = ?, id_item = ?, cpf_reclamante = ?, cpf_devolutor = ?, WHERE id_entrega  = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -95,7 +95,7 @@ public class EntregasDAO {
         }
     }
 
-    public void excluir(String cpf) {
+    public void excluirEntrega(String cpf) {
         String sql = "DELETE FROM RECLAMANTE WHERE cpf_reclamante = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -107,7 +107,4 @@ public class EntregasDAO {
             throw new RuntimeException("Erro ao excluir RECLAMANTE.", e);
         }
     }
-
-
-        
-    }
+}
