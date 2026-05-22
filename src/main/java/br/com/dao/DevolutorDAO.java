@@ -32,7 +32,7 @@ public class DevolutorDAO {
     }
 
     public Devolutor buscarPorCpfDevolutor(String cpf) {
-        String sql = "SELECT cpf_devolutor FROM DEVOLUTOR WHERE cpf_devolutor = ?";
+        String sql = "SELECT cpf_devolutor, nome_devolutor FROM DEVOLUTOR WHERE cpf_devolutor = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -55,7 +55,7 @@ public class DevolutorDAO {
     }
 
     public void inserirDevolutor(Devolutor Devolutor) {
-        String sql = "INSERT INTO ITEM cpf_devolutor, nome_devolutor, telefone_devolutor, email_devolutor VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO DEVOLUTOR cpf_devolutor, nome_devolutor, telefone_devolutor, email_devolutor VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -71,7 +71,7 @@ public class DevolutorDAO {
     }
 
     public void atualizarDevolutor(Devolutor Devolutor) {
-        String sql = "UPDATE ITEM SET nome_devolutor = ?, telefone_devolutor = ?, email_devolutor = ?, WHERE cpf_devolutor = ?";
+        String sql = "UPDATE DEVOLUTOR SET nome_devolutor = ?, telefone_devolutor = ?, email_devolutor = ?, WHERE cpf_devolutor = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -87,7 +87,7 @@ public class DevolutorDAO {
     }
 
     public void excluirDevolutor(int id) {
-        String sql = "DELETE FROM ITEM WHERE cpf_devolutor = ?";
+        String sql = "DELETE FROM DEVOLUTOR WHERE cpf_devolutor = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
