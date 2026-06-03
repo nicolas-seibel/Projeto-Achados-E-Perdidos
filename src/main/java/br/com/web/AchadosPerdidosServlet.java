@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession; // Adicionado para gerenciar a sessão do login
 
 import java.io.IOException;
 import java.sql.Date;
@@ -23,12 +24,18 @@ public class AchadosPerdidosServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        
+        // ALTERADO: Se não houver ação, agora o padrão é ir para a tela de login
         if (action == null) {
-            action = "listar";
+            action = "login";
         }
 
         try {
-            if ("listar".equals(action)) {
+            if ("login".equals(action)) {
+                // Encaminha para o arquivo login.jsp (FrontEnd da sua colega)
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+                
+            } else if ("listar".equals(action)) {
                 String busca = request.getParameter("busca");
                 String status = request.getParameter("status");
                 if (status == null || status.isEmpty()) {
@@ -75,11 +82,28 @@ public class AchadosPerdidosServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
 
-        if ("cadastrar".equals(action)) {
+        // NOVO: Processa os dados enviados pelo formulário de login
+        if ("logar".equals(action)) {
+            String email = request.getParameter("email");
+            String senha = request.getParameter("senha");
+
+            // Validação simples de teste (Usuário: admin@email.com / Senha: 123)
+            if ("admin@email.com".equals(email) && "123".equals(senha)) {
+                HttpSession session = request.getSession();
+                session.setAttribute("usuarioLogado", email);
+                
+                // Se der certo, entra no sistema e lista os itens
+                response.sendRedirect("AchadosPerdidosServlet?action=listar");
+            } else {
+                // Se der errado, volta para o login com uma mensagem de erro
+                request.setAttribute("erro", "Usuário ou senha incorretos!");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            }
+
+        } else if ("cadastrar".equals(action)) {
             try {
                 Item item = new Item();
-                // Mapeando os campos corretos do formulário para as variáveis reais do Model
-                item.setNome_item(request.getParameter("nome_item")); // antigo categoria/nome
+                item.setNome_item(request.getParameter("nome_item")); 
                 item.setDescricao(request.getParameter("descricao"));
                 item.setLocal_achado(request.getParameter("local_achado"));
                 
@@ -89,14 +113,13 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 } else {
                     item.setData_achado(java.time.LocalDate.now());
                 }
-                item.setStatus_item(true); // true = Disponível
+                item.setStatus_item(true); 
 
-                // Chama o método correto que tem o SQL do INSERT
                 itemDao.inserirItem(item); 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            response.sendRedirect("AchadosPerdidosServlet?action=listar");
         }
-        response.sendRedirect("AchadosPerdidosServlet?action=listar");
     }
 }
