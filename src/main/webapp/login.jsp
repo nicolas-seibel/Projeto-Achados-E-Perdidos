@@ -9,14 +9,16 @@
 </head>
 <body>
     <main class="container">
-        <form>
+        <form id="meuFormularioLogin">
             <h1>Login</h1>  
+            
             <div class="input-box">
-                <input placeholder="UsuÃ¡rio" type="email">
+                <input placeholder="Usuário" type="text" id="usuario" required>
                 <i class="bx bxs-user"></i>
             </div>    
+            
             <div class="input-box">
-                <input placeholder="Senha" type="password">
+                <input placeholder="Senha" type="password" id="senha" required>
                  <i class="bx bxs-lock-alt"></i>
             </div>   
             
@@ -31,11 +33,19 @@
             <button type="submit" class="login">Login</button>
 
             <div class="register-link"> 
-                <p>NÃ£o tem uma conta? <a href="#">Cadastre-se</a></p>
+                <p>Não tem uma conta? <a href="#">Cadastre-se</a></p>
             </div>
         </form>
-
     </main>
-    
+
+    <script>
+        document.getElementById('meuFormularioLogin').addEventListener('submit', function(event) {
+            // Impede o navegador de tentar procurar uma página estática inexistente
+            event.preventDefault(); 
+
+            // Força o redirecionamento para a URL exata que funcionou no seu vídeo
+            window.location.href = 'http://localhost:8081/achados-e-perdidos/index.jsp'; 
+        });
+    </script>
 </body>
 </html>

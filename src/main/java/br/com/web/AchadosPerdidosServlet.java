@@ -9,7 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession; // Adicionado para gerenciar a sessão do login
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -25,14 +25,12 @@ public class AchadosPerdidosServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
         
-        // ALTERADO: Se não houver ação, agora o padrão é ir para a tela de login
         if (action == null) {
             action = "login";
         }
 
         try {
             if ("login".equals(action)) {
-                // Encaminha para o arquivo login.jsp (FrontEnd da sua colega)
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 
             } else if ("listar".equals(action)) {
@@ -82,20 +80,16 @@ public class AchadosPerdidosServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
 
-        // NOVO: Processa os dados enviados pelo formulário de login
         if ("logar".equals(action)) {
             String email = request.getParameter("email");
             String senha = request.getParameter("senha");
 
-            // Validação simples de teste (Usuário: admin@email.com / Senha: 123)
             if ("admin@email.com".equals(email) && "123".equals(senha)) {
                 HttpSession session = request.getSession();
                 session.setAttribute("usuarioLogado", email);
                 
-                // Se der certo, entra no sistema e lista os itens
                 response.sendRedirect("AchadosPerdidosServlet?action=listar");
             } else {
-                // Se der errado, volta para o login com uma mensagem de erro
                 request.setAttribute("erro", "Usuário ou senha incorretos!");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
             }
