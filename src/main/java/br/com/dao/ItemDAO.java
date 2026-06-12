@@ -24,7 +24,7 @@ public class ItemDAO {
                 it.setDescricao(rs.getString("descricao"));
                 it.setData_achado(rs.getObject("data_achado", LocalDate.class));
                 it.setLocal_achado(rs.getString("local_achado"));
-                it.setStatus_item(rs.getBoolean("status_item"));
+                it.setStatus_item(rs.getString("status_item"));
                 itens.add(it);
             }
         } catch (SQLException e) {
@@ -50,7 +50,7 @@ public class ItemDAO {
                     it.setDescricao(rs.getString("descricao"));
                     it.setData_achado(rs.getObject("data_achado", LocalDate.class));
                     it.setLocal_achado(rs.getString("local_achado"));
-                    it.setStatus_item(rs.getBoolean("status_item"));
+                    it.setStatus_item(rs.getString("status_item"));
                     return it;
                 }
             }
@@ -61,20 +61,21 @@ public class ItemDAO {
     }
 
     public void inserirItem(Item item) {
-        // CORRIGIDO: Adicionado as 6 interrogações corretas e removido o id do insert caso seja auto_increment
+        // Ajustado para a tabela ITEM e invertido a ordem de data_achado e local_achado no SQL
         String sql = "INSERT INTO ITEM (nome_item, descricao, data_achado, local_achado, status_item) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setString (1, item.getNome_item  ());
-            stmt.setString (2, item.getDescricao  ());
-            stmt.setObject (3, item.getData_achado());
-            stmt.setString (4, item.getLocal_achado());
-            stmt.setBoolean(5, item.getStatus_item());
+            stmt.setString (1, item.getNome_item());
+            stmt.setString (2, item.getDescricao());
+            stmt.setObject (3, item.getData_achado());  // 3º ? -> data_achado (Bateu!)
+            stmt.setString (4, item.getLocal_achado()); // 4º ? -> local_achado (Bateu!)
+            stmt.setString(5, item.getStatus_item());
+            
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao inserir item.", e);
+            throw new RuntimeException("Erro ao inserir item no banco: " + e.getMessage(), e);
         }
     }
 
@@ -87,7 +88,7 @@ public class ItemDAO {
 
             stmt.setString(1, item.getNome_item());
             stmt.setString(2, item.getDescricao());
-            stmt.setBoolean(3, item.getStatus_item());
+            stmt.setString(3, item.getStatus_item());
             stmt.setInt(4, item.getId_item());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -123,7 +124,7 @@ public class ItemDAO {
                 it.setDescricao(rs.getString("descricao"));
                 it.setData_achado(rs.getObject("data_achado", LocalDate.class));
                 it.setLocal_achado(rs.getString("local_achado"));
-                it.setStatus_item(rs.getBoolean("status_item"));
+                it.setStatus_item(rs.getString("status_item"));
                 itemA.add(it);
             }
         } catch (SQLException e) {
@@ -147,7 +148,7 @@ public class ItemDAO {
                 it.setDescricao(rs.getString("descricao"));
                 it.setData_achado(rs.getObject("data_achado", LocalDate.class));
                 it.setLocal_achado(rs.getString("local_achado"));
-                it.setStatus_item(rs.getBoolean("status_item"));
+                it.setStatus_item(rs.getString("status_item"));
                 itemD.add(it);
             }
         } catch (SQLException e) {
@@ -171,7 +172,7 @@ public class ItemDAO {
                 it.setDescricao(rs.getString("descricao"));
                 it.setData_achado(rs.getObject("data_achado", LocalDate.class));
                 it.setLocal_achado(rs.getString("local_achado"));
-                it.setStatus_item(rs.getBoolean("status_item"));
+                it.setStatus_item(rs.getString("status_item"));
                 itemDIA.add(it);
             }
         } catch (SQLException e) {

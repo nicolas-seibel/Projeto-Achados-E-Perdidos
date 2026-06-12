@@ -9,14 +9,14 @@ public class Item {
 	  private String descricao;
 	  private LocalDate data_achado;
 	  private String local_achado;
-	  private Boolean status_item; // True = disponivel false = já retirado/devolvido
+	  private String status_item; // True = disponivel false = já retirado/devolvido
 	  
 	public  Item() {
 		
 	}
 
 	public Item(Integer id_item, String nome_item, String descricao, LocalDate data_achado, String local_achado,
-			Boolean status_item) {
+			String status_item) {
 		super();
 		this.id_item = id_item;
 		this.nome_item = nome_item;
@@ -66,12 +66,12 @@ public class Item {
 		this.local_achado = local_achado;
 	}
 
-	public Boolean getStatus_item() {
-		return status_item;
+	public String getStatus_item() {
+	    return status_item;
 	}
 
-	public void setStatus_item(Boolean status_item) {
-		this.status_item = status_item;
+	public void setStatus_item(String status_item) {
+	    this.status_item = status_item; 
 	}
 
 	public void setCategoria(String parameter) {
@@ -93,6 +93,8 @@ public class Item {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 
 	
 	

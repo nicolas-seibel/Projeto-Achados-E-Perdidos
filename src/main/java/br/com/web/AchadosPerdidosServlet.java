@@ -101,13 +101,14 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 item.setDescricao(request.getParameter("descricao"));
                 item.setLocal_achado(request.getParameter("local_achado"));
                 
+                
                 String dataStr = request.getParameter("data_achado");
                 if (dataStr != null && !dataStr.isEmpty()) {
                     item.setData_achado(java.time.LocalDate.parse(dataStr));
                 } else {
                     item.setData_achado(java.time.LocalDate.now());
                 }
-                item.setStatus_item(true); 
+                item.setStatus_item("disponivel"); 
 
                 itemDao.inserirItem(item); 
             } catch (Exception e) {
