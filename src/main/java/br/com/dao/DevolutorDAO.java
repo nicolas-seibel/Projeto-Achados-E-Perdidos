@@ -27,12 +27,11 @@ public class DevolutorDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao listar devolutores.", e);
         }
-
         return devolutores;
     }
 
     public Devolutor buscarPorCpfDevolutor(String cpf) {
-        String sql = "SELECT cpf_devolutor, nome_devolutor FROM DEVOLUTOR WHERE cpf_devolutor = ?";
+        String sql = "SELECT cpf_devolutor, nome_devolutor, telefone_devolutor, email_devolutor FROM DEVOLUTOR WHERE cpf_devolutor = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -44,55 +43,59 @@ public class DevolutorDAO {
                     Devolutor devo = new Devolutor();
                     devo.setCpf_devolutor(rs.getString("cpf_devolutor"));
                     devo.setNome_devolutor(rs.getString("nome_devolutor"));
+                    devo.setTelefone_devolutor(rs.getString("telefone_devolutor"));
+                    devo.setEmail_devolutor(rs.getString("email_devolutor"));
                     return devo;
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao buscar devolutor por CPF.", e);
         }
-
         return null;
     }
 
-    public void inserirDevolutor(Devolutor Devolutor) {
-        String sql = "INSERT INTO DEVOLUTOR cpf_devolutor, nome_devolutor, telefone_devolutor, email_devolutor VALUES (?, ?, ?, ?)";
+    public void inserirDevolutor(Devolutor devolutor) {
+        // CORRIGIDO: Adicionados os parênteses obrigatórios no INSERT
+        String sql = "INSERT INTO DEVOLUTOR (cpf_devolutor, nome_devolutor, telefone_devolutor, email_devolutor) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setString (1, Devolutor.getCpf_devolutor    ());
-            stmt.setString (2, Devolutor.getNome_devolutor  ());
-            stmt.setString (3, Devolutor.getTelefone_devolutor  ());
-            stmt.setObject (4, Devolutor.getEmail_devolutor());
+            stmt.setString(1, devolutor.getCpf_devolutor());
+            stmt.setString(2, devolutor.getNome_devolutor());
+            stmt.setString(3, devolutor.getTelefone_devolutor());
+            stmt.setString(4, devolutor.getEmail_devolutor());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao inserir devolutor.", e);
         }
     }
 
-    public void atualizarDevolutor(Devolutor Devolutor) {
-        String sql = "UPDATE DEVOLUTOR SET nome_devolutor = ?, telefone_devolutor = ?, email_devolutor = ?, WHERE cpf_devolutor = ?";
+    public void atualizarDevolutor(Devolutor devolutor) {
+        // CORRIGIDO: Removida a vírgula extra antes do WHERE
+        String sql = "UPDATE DEVOLUTOR SET nome_devolutor = ?, telefone_devolutor = ?, email_devolutor = ? WHERE cpf_devolutor = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, Devolutor.getNome_devolutor());
-            stmt.setString(2, Devolutor.getTelefone_devolutor());
-            stmt.setString(3, Devolutor.getEmail_devolutor());
-            stmt.setString(4, Devolutor.getCpf_devolutor());
+            stmt.setString(1, devolutor.getNome_devolutor());
+            stmt.setString(2, devolutor.getTelefone_devolutor());
+            stmt.setString(3, devolutor.getEmail_devolutor());
+            stmt.setString(4, devolutor.getCpf_devolutor());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao atualizar devolutor.", e);
         }
     }
 
-    public void excluirDevolutor(int id) {
+    // CORRIGIDO: Alterado parâmetro de int id para String cpf para bater com o WHERE
+    public void excluirDevolutor(String cpf) {
         String sql = "DELETE FROM DEVOLUTOR WHERE cpf_devolutor = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, id);
+            stmt.setString(1, cpf);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao excluir DEVOLUTOR.", e);

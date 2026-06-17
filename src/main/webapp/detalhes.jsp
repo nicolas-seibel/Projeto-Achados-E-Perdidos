@@ -15,26 +15,31 @@
 </head>
 <body>
 <div class="container">
-    <h1>👁️ Detalhes do Item #${item.id}</h1>
+    <h1>👁️ Detalhes do Item #${item.id_item}</h1>
     
+    <label>Nome do Item:</label>
+    <div class="info-box"><strong>${item.nome_item}</strong></div>
+
     <label>Descrição:</label>
     <div class="info-box">${item.descricao}</div>
     
-    <label>Categoria:</label>
-    <div class="info-box">${item.categoria}</div>
-    
     <label>Local Encontrado:</label>
-    <div class="info-box">${item.local}</div>
+    <div class="info-box">${item.local_achado}</div>
     
     <label>Data:</label>
-    <div class="info-box">${item.dataEncontro}</div>
+    <div class="info-box">${item.data_achado}</div>
     
-    <label>Status Atual:</label>
-    <div class="info-box"><strong>${item.status}</strong></div>
-    
-    <label>Observações:</label>
-    <div class="info-box">${not empty item.observacao ? item.observacao : 'Nenhuma.'}</div>
-
+   <label>Status Atual:</label>
+    <div class="info-box">
+        <c:choose>
+            <c:when test="${item.status_item == 'disponivel'}">
+                <span style="color: #16a34a; font-weight: bold;">ACHADO</span>
+            </c:when>
+            <c:otherwise>
+                <span style="color: #475569; font-weight: bold; text-transform: uppercase;">${item.status_item}</span>
+            </c:otherwise>
+        </c:choose>
+    </div>
     <a href="AchadosPerdidosServlet?action=listar" class="btn">Voltar à Lista</a>
 </div>
 </body>

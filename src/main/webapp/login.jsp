@@ -44,7 +44,7 @@
             event.preventDefault(); 
 
             // Força o redirecionamento para a URL exata que funcionou no seu vídeo
-            window.location.href = 'http://localhost:8081/achados-e-perdidos/index.jsp'; 
+            window.location.href = '<%= request.getContextPath() %>/index.jsp';  
         });
     </script>
 </body>

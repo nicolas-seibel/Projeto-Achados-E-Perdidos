@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.util.List;
 
 @WebServlet("/AchadosPerdidosServlet")
@@ -34,13 +33,18 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 
             } else if ("listar".equals(action)) {
-                String busca = request.getParameter("busca");
                 String status = request.getParameter("status");
-                if (status == null || status.isEmpty()) {
-                    status = "ACHADO";
+                List<Item> itens;
+
+                // CORRIGIDO: Captura o parâmetro do combobox do JSP de forma exata
+                if ("DEVOLVIDO".equals(status) || "devolvido".equals(status)) {
+                    itens = itemDao.listarDItem(); // Usa seu método de filtrados devolvidos
+                } else if ("ACHADO".equals(status) || "disponivel".equals(status)) {
+                    itens = itemDao.listarAItem(); // Usa seu método de filtrados disponíveis
+                } else {
+                    itens = itemDao.listarItem();  // Fallback seguro: traz tudo
                 }
-                	
-                List<Item> itens = itemDao.listarItem();
+                    
                 request.setAttribute("itens", itens);
                 request.getRequestDispatcher("index.jsp").forward(request, response);
                 
@@ -70,7 +74,17 @@ public class AchadosPerdidosServlet extends HttpServlet {
                     itemDao.marcarComoDevolvido(id);
                 }
                 response.sendRedirect("AchadosPerdidosServlet?action=listar");
+
+            } else if ("desfazerDevolucao".equals(action)) { 
+                String idParam = request.getParameter("id");
+                if (idParam != null && !idParam.isEmpty() && idParam.matches("\\d+")) {
+                    int id = Integer.parseInt(idParam);
+                    itemDao.marcarComoAchado(id); 
+                }
+                // Redireciona de volta de forma limpa para a listagem geral
+                response.sendRedirect("AchadosPerdidosServlet?action=listar");
             }
+
         } catch (Exception e) {
             throw new ServletException("Erro no fluxo do Servlet: " + e.getMessage(), e);
         }
@@ -100,7 +114,6 @@ public class AchadosPerdidosServlet extends HttpServlet {
                 item.setNome_item(request.getParameter("nome_item")); 
                 item.setDescricao(request.getParameter("descricao"));
                 item.setLocal_achado(request.getParameter("local_achado"));
-                
                 
                 String dataStr = request.getParameter("data_achado");
                 if (dataStr != null && !dataStr.isEmpty()) {

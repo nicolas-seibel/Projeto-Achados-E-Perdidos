@@ -32,17 +32,17 @@
         <input type="hidden" name="action" value="listar">
         <input type="text" name="busca" placeholder="Buscar por descrição (F02)..." value="${param.busca}">
         <select name="status">
-            <option value="ACHADO" ${param.status == 'ACHADO' ? 'selected' : ''}>Ver: ACHADOS</option>
-            <option value="DEVOLVIDO" ${param.status == 'DEVOLVIDO' ? 'selected' : ''}>Ver: DEVOLVIDOS</option>
+            <option value="disponivel" ${param.status == 'disponivel' ? 'selected' : ''}>Ver: ACHADOS</option>
+            <option value="devolvido" ${param.status == 'devolvido' ? 'selected' : ''}>Ver: DEVOLVIDOS</option>
         </select>
         <button type="submit" class="btn btn-primary">Filtrar</button>
     </form>
 
-    <table>
+<table>
         <thead>
             <tr>
-                <th>Descrição</th>
-                <th>Categoria</th>
+                <th>Item / Descrição</th>
+                <th>Local Onde Foi Achado</th>
                 <th>Status</th>
                 <th>Ações</th>
             </tr>
@@ -52,21 +52,39 @@
                 <c:when test="${not empty itens}">
                     <c:forEach var="item" items="${itens}">
                         <tr>
-                            <td><strong>${item.descricao}</strong></td>
-                            <td>${item.categoria}</td>
-                            <td>${item.status}</td>
+                            <td><strong>${item.nome_item}</strong><br><small style="color: #64748b;">${item.descricao}</small></td>
+                            <td>${item.local_achado}</td>
                             <td>
-                                <a href="AchadosPerdidosServlet?action=detalhar&id=${item.id}" class="btn-action" title="Detalhes">👁️</a> 
-                                <c:if test="${item.status == 'ACHADO'}">
-                                    <button onclick="confirmarDevolucao(${item.id})" class="btn-action" title="Marcar como Devolvido">✅</button>
+                                <c:choose>
+                                    <c:when test="${item.status_item == 'disponivel'}">
+                                        <span style="color: var(--success); font-weight: bold;">ACHADO</span>
+                                    </c:when>
+                                    <c:when test="${item.status_item == 'devolvido'}">
+                                        <span style="color: #64748b; font-weight: bold;">DEVOLVIDO</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span style="font-weight: bold; text-transform: uppercase;">${item.status_item}</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <a href="AchadosPerdidosServlet?action=detalhar&id=${item.id_item}" class="btn-action" title="Detalhes">👁️</a> 
+                                
+                                <c:if test="${item.status_item == 'disponivel'}">
+                                    <button onclick="confirmarDevolucao(${item.id_item})" class="btn-action" title="Marcar como Devolvido">✅</button>
                                 </c:if>
-                                <button onclick="confirmarExclusao(${item.id})" class="btn-action" title="Excluir">🗑️</button>
+
+                                <c:if test="${item.status_item == 'devolvido'}">
+                                    <button onclick="confirmarRetornoAchado(${item.id_item})" class="btn-action" title="Desfazer devolução (Voltar para Achado)">↩️</button>
+                                </c:if>
+
+                                <button onclick="confirmarExclusao(${item.id_item})" class="btn-action" title="Excluir">🗑️</button>
                             </td>
                         </tr>
                     </c:forEach>
                 </c:when>
                 <c:otherwise>
-                    <tr><td colspan="4" style="text-align:center; padding: 20px; color: #64748b;">Nenhum item listado. Use o botão Filtrar ou acesse o Servlet.</td></tr>
+                    <tr><td colspan="4" style="text-align:center; padding: 20px; color: #64748b;">Nenhum item listado para este filtro.</td></tr>
                 </c:otherwise>
             </c:choose>
         </tbody>
@@ -82,6 +100,12 @@
     function confirmarDevolucao(id) {
         if(confirm("✅ F04: Confirmar que o item #" + id + " foi devolvido?")) {
             window.location.href = "AchadosPerdidosServlet?action=devolver&id=" + id;
+        }
+    }
+    // NOVA FUNÇÃO JS PARA O RETORNO:
+    function confirmarRetornoAchado(id) {
+        if(confirm("🔄 Deseja cancelar a devolução e colocar o item #" + id + " de volta como ACHADO?")) {
+            window.location.href = "AchadosPerdidosServlet?action=desfazerDevolucao&id=" + id;
         }
     }
 </script>

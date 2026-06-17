@@ -26,30 +26,23 @@
         <input type="hidden" name="action" value="cadastrar">
 
         <div class="form-group">
-            <label>Descrição*</label>
-            <input type="text" name="descricao" required placeholder="Ex: iPhone 13 preto">
+            <label>Nome do Item*</label>
+            <input type="text" name="nome_item" required placeholder="Ex: Celular, Chave, Carteira">
         </div>
+
         <div class="form-group">
-            <label>Categoria*</label>
-            <select name="categoria" required>
-                <option value="">Selecione...</option>
-                <option value="Eletrônicos">Eletrônicos</option>
-                <option value="Documentos">Documentos</option>
-                <option value="Acessórios">Acessórios</option>
-                <option value="Outros">Outros</option>
-            </select>
+            <label>Descrição Detalhada*</label>
+            <input type="text" name="descricao" required placeholder="Ex: iPhone 13 preto com capinha azul">
         </div>
+
         <div class="form-group">
             <label>Local onde foi encontrado*</label>
-            <input type="text" name="local" required placeholder="Ex: Praça de Alimentação">
+            <input type="text" name="local_achado" required placeholder="Ex: Praça de Alimentação">
         </div>
+
         <div class="form-group">
             <label>Data do Encontro*</label>
-            <input type="date" name="data_encontro" required>
-        </div>
-        <div class="form-group">
-            <label>Observação (Opcional)</label>
-            <textarea name="observacao" placeholder="Detalhes adicionais..."></textarea>
+            <input type="date" name="data_achado" required>
         </div>
 
         <div class="actions">

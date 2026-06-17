@@ -18,7 +18,7 @@ public class UsuarioDAO {
             
             while (rs.next()) {
                 Usuario usu = new Usuario();
-                usu.setId_usuario(rs.getInt("Id_usuario"));
+                usu.setId_usuario(rs.getInt("id_usuario"));
                 usu.setNome_usuario(rs.getString("nome_usuario"));
                 usu.setEmail_usuario(rs.getString("email_usuario"));
                 usu.setSenha_usuario(rs.getString("senha_usuario"));
@@ -27,59 +27,62 @@ public class UsuarioDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao listar usuarios.", e);
         }
-
         return usuarios;
     }
 
-    public Usuario buscarIdUsuario(String cpf) {
-        String sql = "SELECT id_usuario, nome_usuario FROM USUARIO WHERE id_usuario = ?";
+    // CORRIGIDO: Alterado parâmetro de String cpf para int id
+    public Usuario buscarIdUsuario(int id) {
+        String sql = "SELECT id_usuario, nome_usuario, email_usuario, senha_usuario FROM USUARIO WHERE id_usuario = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, cpf);
+            stmt.setInt(1, id);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     Usuario usu = new Usuario();
                     usu.setId_usuario(rs.getInt("id_usuario"));
                     usu.setNome_usuario(rs.getString("nome_usuario"));
+                    usu.setEmail_usuario(rs.getString("email_usuario"));
+                    usu.setSenha_usuario(rs.getString("senha_usuario"));
                     return usu;
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao buscar Usuario por ID.", e);
         }
-
         return null;
     }
 
-    public void inserirUsuario(Usuario Usuario) {
-        String sql = "INSERT INTO ITEM id_usuario, nome_usuario, email_usuario, senha_usuario VALUES (?, ?, ?, ?)";
+    public void inserirUsuario(Usuario usuario) {
+        // CORRIGIDO: Adicionado parênteses e alterado de ITEM para USUARIO
+        String sql = "INSERT INTO USUARIO (id_usuario, nome_usuario, email_usuario, senha_usuario) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setInt (1, Usuario.getId_usuario    ());
-            stmt.setString (2, Usuario.getNome_usuario  ());
-            stmt.setString (3, Usuario.getEmail_usuario  ());
-            stmt.setObject (4, Usuario.getSenha_usuario());
+            stmt.setInt(1, usuario.getId_usuario());
+            stmt.setString(2, usuario.getNome_usuario());
+            stmt.setString(3, usuario.getEmail_usuario());
+            stmt.setString(4, usuario.getSenha_usuario());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao inserir Usuario.", e);
         }
     }
 
-    public void atualizarUsuario(Usuario Usuario) {
-        String sql = "UPDATE ITEM SET nome_usuario = ?, email_usuario = ?, senha_usuario = ?, WHERE id_usuario = ?";
+    public void atualizarUsuario(Usuario usuario) {
+        // CORRIGIDO: Alterado para a tabela USUARIO e removida a vírgula antes do WHERE
+        String sql = "UPDATE USUARIO SET nome_usuario = ?, email_usuario = ?, senha_usuario = ? WHERE id_usuario = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, Usuario.getNome_usuario());
-            stmt.setString(2, Usuario.getEmail_usuario());
-            stmt.setString(3, Usuario.getSenha_usuario());
-            stmt.setInt(4, Usuario.getId_usuario());
+            stmt.setString(1, usuario.getNome_usuario());
+            stmt.setString(2, usuario.getEmail_usuario());
+            stmt.setString(3, usuario.getSenha_usuario());
+            stmt.setInt(4, usuario.getId_usuario());
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao atualizar usuario.", e);
@@ -87,7 +90,8 @@ public class UsuarioDAO {
     }
 
     public void excluirUsuario(int id) {
-        String sql = "DELETE FROM ITEM WHERE id_usuario = ?";
+        // CORRIGIDO: Alterado de ITEM para USUARIO
+        String sql = "DELETE FROM USUARIO WHERE id_usuario = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -98,6 +102,4 @@ public class UsuarioDAO {
             throw new RuntimeException("Erro ao excluir USUARIO.", e);
         }
     }
-
-
 }
