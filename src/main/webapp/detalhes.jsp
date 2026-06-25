@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -29,18 +30,18 @@
     <label>Data:</label>
     <div class="info-box">${item.data_achado}</div>
     
-   <label>Status Atual:</label>
+    <label>Status Atual:</label>
     <div class="info-box">
         <c:choose>
             <c:when test="${item.status_item == 'disponivel'}">
                 <span style="color: #16a34a; font-weight: bold;">ACHADO</span>
             </c:when>
-            <c:otherwise>
-                <span style="color: #475569; font-weight: bold; text-transform: uppercase;">${item.status_item}</span>
-            </c:otherwise>
+            <c:when test="${item.status_item == 'devolvido'}">
+                <span style="color: #475569; font-weight: bold;">DEVOLVIDO</span>
+            </c:when>
         </c:choose>
     </div>
+
     <a href="AchadosPerdidosServlet?action=listar" class="btn">Voltar à Lista</a>
-</div>
-</body>
+</div> </body>
 </html>

@@ -89,7 +89,6 @@ public class AchadosPerdidosServlet extends HttpServlet {
             throw new ServletException("Erro no fluxo do Servlet: " + e.getMessage(), e);
         }
     }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
